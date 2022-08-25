@@ -176,7 +176,7 @@ int lorawan_clock_sync_run(void);
 	*/
 int lorawan_clock_sync_get(uint32_t *gps_time);
 
- #endif /* CONFIG_LORAWAN_APP_CLOCK_SYNC */
+#endif /* CONFIG_LORAWAN_APP_CLOCK_SYNC */
 
 /**
  * @brief Add battery level callback function.
