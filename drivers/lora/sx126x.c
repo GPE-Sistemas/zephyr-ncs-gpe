@@ -302,6 +302,12 @@ void SX126xSetOperatingMode(RadioOperatingModes_t mode)
 		if (pm_device_runtime_is_enabled(dev_config.bus.bus)) {
 			pm_device_runtime_put(dev_config.bus.bus);
 		}
+		if (pm_device_runtime_is_enabled(dev_config.rx_enable.port)) {
+			pm_device_runtime_put(dev_config.rx_enable.port);
+		}
+		if (pm_device_runtime_is_enabled(dev_config.tx_enable.port)) {
+			pm_device_runtime_put(dev_config.tx_enable.port);
+		}
 		__fallthrough;
 	default:
 		sx126x_set_rx_enable(0);
@@ -393,6 +399,12 @@ void SX126xWakeup(void)
 	if (pm_device_runtime_is_enabled(dev_config.bus.bus)) {
 		pm_device_runtime_get(dev_config.bus.bus);
 	}
+	if (pm_device_runtime_is_enabled(dev_config.rx_enable.port)) {
+			pm_device_runtime_get(dev_config.rx_enable.port);
+		}
+		if (pm_device_runtime_is_enabled(dev_config.tx_enable.port)) {
+			pm_device_runtime_get(dev_config.tx_enable.port);
+		}
 	LOG_DBG("Sending GET_STATUS");
 	ret = spi_write_dt(&dev_config.bus, &tx);
 	if (ret < 0) {
