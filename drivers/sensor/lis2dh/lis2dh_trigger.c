@@ -107,8 +107,8 @@ static int lis2dh_start_trigger_int1(const struct device *dev)
 	}
 
 	return lis2dh->hw_tf->update_reg(dev, LIS2DH_REG_CTRL3,
-					 LIS2DH_EN_DRDY1_INT1,
-					 LIS2DH_EN_DRDY1_INT1);
+					 LIS2DH_EN_FF_INT1,
+					 LIS2DH_EN_FF_INT1);
 }
 
 #define LIS2DH_ANYM_CFG (LIS2DH_INT_CFG_ZHIE_ZUPE | LIS2DH_INT_CFG_YHIE_YUPE |\
@@ -183,11 +183,19 @@ static int lis2dh_start_trigger_int2(const struct device *dev)
 	const struct lis2dh_config *cfg = dev->config;
 
 	setup_int2(dev, true);
-
+	LOG_INF("Set trigger int2 %s", "");
+	lis2dh->hw_tf->write_reg(dev, LIS2DH_REG_CTRL1, 0x57);
+	lis2dh->hw_tf->write_reg(dev, LIS2DH_REG_CTRL2, 0x00);
+	lis2dh->hw_tf->write_reg(dev, LIS2DH_REG_CTRL3, 0x40);
+	lis2dh->hw_tf->write_reg(dev, LIS2DH_REG_CTRL4, 0x00);
+	lis2dh->hw_tf->write_reg(dev, LIS2DH_REG_CTRL5, 0x04);
+	lis2dh->hw_tf->write_reg(dev, LIS2DH_REG_CTRL6, 0x40);
+	lis2dh->hw_tf->write_reg(dev, cfg->hw.anym_on_int1 ? LIS2DH_REG_INT1_THS : LIS2DH_REG_INT2_THS, LIS2DH_EN_FF_INT_THS);
+	lis2dh->hw_tf->write_reg(dev, cfg->hw.anym_on_int1 ? LIS2DH_REG_INT1_DUR : LIS2DH_REG_INT2_DUR, LIS2DH_EN_FF_INT_DUR);
 	return lis2dh->hw_tf->write_reg(
 		dev,
 		cfg->hw.anym_on_int1 ? LIS2DH_REG_INT1_CFG : LIS2DH_REG_INT2_CFG,
-		LIS2DH_ANYM_CFG);
+		LIS2DH_EN_FF_CFG);
 }
 
 int lis2dh_trigger_set(const struct device *dev,
